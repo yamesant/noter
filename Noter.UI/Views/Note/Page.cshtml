@@ -1,0 +1,33 @@
+@model NoteViewModels.Paginated
+
+@if (Model.NotePreviews.Count > 0)
+{
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Page" asp-route-pageNumber="@(Model.PageNumber-1)">Previous Page</a>
+    }
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Page" asp-route-pageNumber="@(Model.PageNumber+1)">Next Page</a>
+    }
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Content Preview</th>
+        </tr>
+        @foreach (NoteViewModels.Preview note in Model.NotePreviews)
+        {
+            <tr>
+                <td>@note.Id</td>
+                <td>@note.Title</td>
+                <td>@note.ContentPreview</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No results</p>
+}

@@ -8,4 +8,12 @@ public static class NoteViewModels
         public required string Title { get; set; }
         public required string ContentPreview { get; set; }
     }
+    
+    public class Paginated
+    {
+        public required List<Preview> NotePreviews { get; set; }
+        public required int PageNumber { get; set; }
+        public required bool HasPreviousPage { get; set; }
+        public required bool HasNextPage { get; set; }
+    }
 }
