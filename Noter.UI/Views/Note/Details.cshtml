@@ -1,0 +1,5 @@
+@model NoteViewModels.Main
+
+<h1>@Model.Title</h1>
+
+@Html.Raw(Model.Content?.Replace("\n", "<br/>"))

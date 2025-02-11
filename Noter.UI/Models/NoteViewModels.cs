@@ -16,4 +16,11 @@ public static class NoteViewModels
         public required bool HasPreviousPage { get; set; }
         public required bool HasNextPage { get; set; }
     }
+    
+    public class Main
+    {
+        public required Guid Id { get; set; }
+        public required string Title { get; set; }
+        public required string Content { get; set; }
+    }
 }

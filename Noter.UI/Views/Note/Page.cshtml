@@ -16,6 +16,7 @@
             <th>Id</th>
             <th>Title</th>
             <th>Content Preview</th>
+            <th>Actions</th>
         </tr>
         @foreach (NoteViewModels.Preview note in Model.NotePreviews)
         {
@@ -23,6 +24,9 @@
                 <td>@note.Id</td>
                 <td>@note.Title</td>
                 <td>@note.ContentPreview</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@note.Id">Details</a>
+                </td>
             </tr>
         }
     </table>

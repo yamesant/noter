@@ -49,4 +49,28 @@ public class NoteController(DataContext dataContext) : Controller
         
         return View(model);
     }
+    
+    public async Task<IActionResult> Details(Guid? id)
+    {
+        if (id is null)
+        {
+            return NotFound();
+        }
+
+        Note? note = await dataContext.Notes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+        if (note is null)
+        {
+            return NotFound();
+        }
+
+        NoteViewModels.Main model = new()
+        {
+            Id = note.Id,
+            Title = note.Title,
+            Content = note.Content,
+        };
+        return View(model);
+    }
 }
