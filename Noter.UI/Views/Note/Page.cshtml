@@ -2,6 +2,8 @@
 
 @if (Model.NotePreviews.Count > 0)
 {
+    <a asp-action="Create">Create New</a>
+
     @if (Model.HasPreviousPage)
     {
         <a asp-action="Page" asp-route-pageNumber="@(Model.PageNumber-1)">Previous Page</a>

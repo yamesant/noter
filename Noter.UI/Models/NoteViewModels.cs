@@ -30,4 +30,10 @@ public static class NoteViewModels
         public required string? Title { get; set; }
         public required string? Content { get; set; }
     }
+    
+    public class Create
+    {
+        public required string? Title { get; set; }
+        public required string? Content { get; set; }
+    }
 }

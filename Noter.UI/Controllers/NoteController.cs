@@ -128,4 +128,37 @@ public class NoteController(DataContext dataContext) : Controller
         await dataContext.SaveChangesAsync();
         return RedirectToAction("Details", new { id = note.Id });
     }
+    
+    public IActionResult Create()
+    {
+        return View();
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Create(NoteViewModels.Create model)
+    {
+        if (model.Title is null || model.Title.Length == 0)
+        {
+            ModelState.AddModelError("Title", "Title is required");
+            return View(model);
+        }
+
+        Note? sameNameNote = await dataContext.Notes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Title == model.Title);
+        if (sameNameNote is not null)
+        {
+            ModelState.AddModelError("Title", "Note with this title already exists");
+            return View(model);
+        }
+
+        Note note = new()
+        {
+            Title = model.Title,
+            Content = model.Content ?? "",
+        };
+        dataContext.Notes.Add(note);
+        await dataContext.SaveChangesAsync();
+        return RedirectToAction("Details", new { id = note.Id });
+    }
 }
