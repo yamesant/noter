@@ -73,4 +73,59 @@ public class NoteController(DataContext dataContext) : Controller
         };
         return View(model);
     }
+    
+    public async Task<IActionResult> Edit(Guid? id)
+    {
+        if (id is null)
+        {
+            return NotFound();
+        }
+
+        Note? note = await dataContext.Notes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+        if (note is null)
+        {
+            return NotFound();
+        }
+
+        NoteViewModels.Edit model = new()
+        {
+            Id = note.Id,
+            Title = note.Title,
+            Content = note.Content,
+        };
+        return View(model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Edit(NoteViewModels.Edit model)
+    {
+        if (model.Title is null || model.Title.Length == 0)
+        {
+            ModelState.AddModelError("Title", "Title is required");
+            return View(model);
+        }
+        
+        Note? note = await dataContext.Notes
+            .FirstOrDefaultAsync(x => x.Id == model.Id);
+        if (note is null)
+        {
+            return BadRequest();
+        }
+
+        Note? sameNameNote = await dataContext.Notes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Title == model.Title && x.Id != model.Id);
+        if (sameNameNote is not null)
+        {
+            ModelState.AddModelError("Title", "Note with this title already exists");
+            return View(model);
+        }
+
+        note.Title = model.Title;
+        note.Content = model.Content ?? "";
+        await dataContext.SaveChangesAsync();
+        return RedirectToAction("Details", new { id = note.Id });
+    }
 }

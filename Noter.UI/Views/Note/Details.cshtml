@@ -1,5 +1,7 @@
 @model NoteViewModels.Main
 
+<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+
 <h1>@Model.Title</h1>
 
 @Html.Raw(Model.Content?.Replace("\n", "<br/>"))

@@ -23,4 +23,11 @@ public static class NoteViewModels
         public required string Title { get; set; }
         public required string Content { get; set; }
     }
+    
+    public class Edit
+    {
+        public required Guid Id { get; set; }
+        public required string? Title { get; set; }
+        public required string? Content { get; set; }
+    }
 }
