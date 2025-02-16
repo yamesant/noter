@@ -13,13 +13,16 @@
         <a asp-action="Page" asp-route-pageNumber="@(Model.PageNumber+1)">Next Page</a>
     }
 
-    <table>
+    <table class="table table-striped table-hover">
+        <thead>
         <tr>
             <th>Id</th>
             <th>Title</th>
             <th>Content Preview</th>
             <th>Actions</th>
         </tr>
+        </thead>
+        <tbody class="table-group-divider">
         @foreach (NoteViewModels.Preview note in Model.NotePreviews)
         {
             <tr>
@@ -32,6 +35,7 @@
                 </td>
             </tr>
         }
+        </tbody>
     </table>
 }
 else
