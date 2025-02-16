@@ -13,6 +13,7 @@ public static class NoteViewModels
     {
         public required List<Preview> NotePreviews { get; set; }
         public required int PageNumber { get; set; }
+        public required int TotalPages { get; set; }
         public required bool HasPreviousPage { get; set; }
         public required bool HasNextPage { get; set; }
     }

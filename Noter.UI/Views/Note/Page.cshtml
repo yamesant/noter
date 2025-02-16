@@ -2,16 +2,29 @@
 
 @if (Model.NotePreviews.Count > 0)
 {
-    <a asp-action="Create">Create New</a>
-
-    @if (Model.HasPreviousPage)
-    {
-        <a asp-action="Page" asp-route-pageNumber="@(Model.PageNumber-1)">Previous Page</a>
-    }
-    @if (Model.HasNextPage)
-    {
-        <a asp-action="Page" asp-route-pageNumber="@(Model.PageNumber+1)">Next Page</a>
-    }
+    <div class="row">
+        <div class="col">
+            <a asp-action="Create">Create New</a>
+        </div>
+        <div class="col">
+            <nav aria-label="Note preview pages">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Page" asp-route-pageNumber="1">First</a>
+                    </li>
+                    <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                        <a class="page-link" asp-action="Page" asp-route-pageNumber="@(Model.PageNumber - 1)">Previous</a>
+                    </li>
+                    <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                        <a class="page-link" asp-action="Page" asp-route-pageNumber="@(Model.PageNumber + 1)">Next</a>
+                    </li>
+                    <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Page" asp-route-pageNumber="@Model.TotalPages">Last</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 
     <table class="table table-striped table-hover">
         <thead>
