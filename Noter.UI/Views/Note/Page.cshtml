@@ -4,7 +4,7 @@
 {
     <div class="row">
         <div class="col">
-            <a asp-action="Create">Create New</a>
+            <a class="btn btn-primary" asp-action="Create">Create New</a>
         </div>
         <div class="col">
             <nav aria-label="Note preview pages">
@@ -43,8 +43,10 @@
                 <td>@note.Title</td>
                 <td>@note.ContentPreview</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@note.Id">Details</a>
-                    <a asp-action="Edit" asp-route-id="@note.Id">Edit</a>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@note.Id">Details</a>
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@note.Id">Edit</a>
+                    </div>
                 </td>
             </tr>
         }
