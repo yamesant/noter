@@ -43,6 +43,7 @@ public class NoteController(DataContext dataContext) : Controller
         {
             NotePreviews = notes,
             PageNumber = pageNumber,
+            TotalPages = totalPages,
             HasPreviousPage = pageNumber > 1,
             HasNextPage = pageNumber < totalPages,
         };
