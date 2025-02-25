@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Noter.Domain;
@@ -5,10 +7,12 @@ using Noter.UI.Models;
 
 namespace Noter.UI.Controllers;
 
-public class NoteController(DataContext dataContext) : Controller
+[Authorize]
+public class NoteController(DataContext dataContext, UserManager<User> userManager) : Controller
 {
     private const int PreviewMaxLength = 200;
     private const int PageSize = 100;
+    private string UserId => userManager.GetUserId(User) ?? throw new UnauthorizedAccessException();
     public IActionResult Index()
     {
         return RedirectToAction("Page", new { pageNumber = 1 });
@@ -20,8 +24,10 @@ public class NoteController(DataContext dataContext) : Controller
         {
             return RedirectToAction("Page", new { pageNumber = 1 });
         }
-
-        int notesCount = await dataContext.Notes.CountAsync();
+        
+        int notesCount = await dataContext.Notes
+            .Where(x => x.UserId == UserId)
+            .CountAsync();
         int totalPages = notesCount == 0 ? 1 : (notesCount + PageSize - 1) / PageSize;
         if (pageNumber > totalPages)
         {
@@ -30,6 +36,7 @@ public class NoteController(DataContext dataContext) : Controller
 
         List<NoteViewModels.Preview> notes = await dataContext.Notes
             .AsNoTracking()
+            .Where(x => x.UserId == UserId)
             .OrderBy(x => x.Id)
             .Skip((pageNumber - 1) * PageSize)
             .Take(PageSize)
@@ -60,7 +67,7 @@ public class NoteController(DataContext dataContext) : Controller
 
         Note? note = await dataContext.Notes
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == UserId);
         if (note is null)
         {
             return NotFound();
@@ -84,7 +91,7 @@ public class NoteController(DataContext dataContext) : Controller
 
         Note? note = await dataContext.Notes
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == UserId);
         if (note is null)
         {
             return NotFound();
@@ -109,7 +116,7 @@ public class NoteController(DataContext dataContext) : Controller
         }
         
         Note? note = await dataContext.Notes
-            .FirstOrDefaultAsync(x => x.Id == model.Id);
+            .FirstOrDefaultAsync(x => x.Id == model.Id && x.UserId == UserId);
         if (note is null)
         {
             return BadRequest();
@@ -157,6 +164,7 @@ public class NoteController(DataContext dataContext) : Controller
         {
             Title = model.Title,
             Content = model.Content ?? "",
+            UserId = UserId,
         };
         dataContext.Notes.Add(note);
         await dataContext.SaveChangesAsync();
