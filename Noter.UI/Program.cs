@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Noter.Domain;
+using Microsoft.AspNetCore.Identity;
+using Noter.UI.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataContextConnection"));
 });
+
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DataContext>();
 
 var app = builder.Build();
 
