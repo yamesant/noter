@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Noter.UI.Areas.Identity.Data;
+using Noter.Domain;
 
 namespace Noter.UI.Areas.Identity.Pages.Account
 {
