@@ -15,23 +15,31 @@ DbContextOptions<DataContext> options = new DbContextOptionsBuilder<DataContext>
     .Options;
 DataContext context = new(options);
 
-
 Randomizer.Seed = new Random(-1);
-NoteFaker faker = new();
-int numberOfEntities = 100_000;
-int chunkSize = 10_000;
-int numberOfChunks = numberOfEntities / chunkSize;
+UserFaker userFaker = new();
+NoteFaker noteFaker = new();
+int numberOfUsers = 50;
+int averageNotesPerUser = 10;
+int chunkSize = 10;
+int numberOfChunks = numberOfUsers / chunkSize;
 
-if (context.Notes.Any())
+if (context.Users.Any() || context.Notes.Any())
 {
     Console.WriteLine("Already generated");
     return;
 }
 
-using ProgressBar progressBar = new(numberOfChunks, "Generating and importing notes");
+using ProgressBar progressBar = new(numberOfChunks, "Generating and importing users and notes");
 for (int i = 0; i < numberOfChunks; i++)
 {
-    List<Note> entities = faker.Generate(chunkSize);
-    context.BulkInsert(entities);
+    List<User> users = userFaker.Generate(chunkSize);
+    foreach (User user in users)
+    {
+        int numberOfNotes = Randomizer.Seed.Next(0, 2*averageNotesPerUser);
+        List<Note> notes = noteFaker.Generate(numberOfNotes);
+        user.Notes = notes;
+    }
+
+    context.BulkInsert(users, new BulkConfig { IncludeGraph = true });
     progressBar.Tick();
 }

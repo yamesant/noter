@@ -8,6 +8,8 @@ public class Note
     public Guid Id { get; set; }
     public required string Title { get; set; }
     public required string Content { get; set; }
+    public string UserId { get; set; }
+    public User User { get; set; } = null!;
 }
 
 public class NoteConfiguration : IEntityTypeConfiguration<Note>
@@ -17,5 +19,10 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note>
         builder.Property(x => x.Title).HasMaxLength(200);
         builder.HasIndex(x => x.Title).IsUnique();
         builder.Property(x => x.Content).HasMaxLength(50000);
+        builder.HasOne(x => x.User)
+            .WithMany(x => x.Notes)
+            .HasForeignKey("UserId")
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
